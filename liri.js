@@ -17,33 +17,37 @@ var Spotify = require('node-spotify-api');
 var spotify = new Spotify(keys.Spotify)
 
 // console.log(spotify)
+var searchContent=process.argv.slice(3)
+// var searchJoin=searchContent.join("")
+
+console.log(searchContent)
 
 
 
 
-spotifySearch = function () {
+spotifySearch = function (searchContent) {
 
 
-    songName = "";
-    for (var i = 3; i < nodeArgs.length; i++) {
+    // songName = "";
+    // for (var i = 3; i < nodeArgs.length; i++) {
 
-        if (i > 3 && i < nodeArgs.length) {
+    //     if (i > 3 && i < nodeArgs.length) {
 
-            songName = songName + "+" + nodeArgs[i];
+    //         songName = songName + "+" + nodeArgs[i];
 
-        }
+    //     }
 
-        else {
+    //     else {
 
-            songName += nodeArgs[i];
+    //         songName += nodeArgs[i];
 
-        }
-    }
-
-
+    //     }
+    // }
 
 
-    spotify.search({ type: 'track', query: songName, limit: "20" })
+
+
+    spotify.search({ type: 'track', query: searchContent, limit: "20" })
         .then(function (response) {
             songData = response.tracks.items
 
@@ -70,26 +74,26 @@ spotifySearch = function () {
 
 }
 
-movieSearch = function () {
+movieSearch = function (searchContent) {
 
-    var movieName = "";
-    for (var i = 3; i < nodeArgs.length; i++) {
+    // var movieName = "";
+    // for (var i = 3; i < nodeArgs.length; i++) {
 
-        if (i > 3 && i < nodeArgs.length) {
+    //     if (i > 3 && i < nodeArgs.length) {
 
-            movieName = movieName + "+" + nodeArgs[i];
+    //         movieName = movieName + "+" + nodeArgs[i];
 
-        }
+    //     }
 
-        else {
+    //     else {
 
-            movieName += nodeArgs[i];
+    //         movieName += nodeArgs[i];
 
-        }
-    }
+    //     }
+    // }
 
 
-    request("http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy", function (error, response, body) {
+    request("http://www.omdbapi.com/?t=" + searchContent + "&y=&plot=short&apikey=trilogy", function (error, response, body) {
 
 
         if (!error && response.statusCode === 200) {
@@ -121,30 +125,51 @@ movieSearch = function () {
 
 }
 
-concertSearch = function () {
+concertSearch = function (searchContent) {
+console.log(searchContent)
+// var searchJoin=searchContent.join("")
+
+
+    // var bandName = "";
+    // for (var i = 3; i < nodeArgs.length; i++) {
+
+    //     if (i > 3 && i < nodeArgs.length) {
+
+    //         bandName = bandName + "%20" + nodeArgs[i];
+
+    //     }
+
+    //     else {
+
+    //         bandName += nodeArgs[i];
+
+    //     }
+
+    // }
+    // console.log(bandName)
+    // var bandName=searchContent.split(" ")
+    // addSpace(){
+
+    //  for (var i = 3; i < nodeArgs.length; i++) {
+
+    //     if (i > 3 && i < nodeArgs.length) {
+
+    //         bandName = bandName + "%20" + nodeArgs[i];
+
+    //     }
+
+    //     else {
+
+    //         bandName += nodeArgs[i];
+
+    //     }
+
+    // }}
+    // console.log(bandName)
 
 
 
-
-    var bandName = "";
-    for (var i = 3; i < nodeArgs.length; i++) {
-
-        if (i > 3 && i < nodeArgs.length) {
-
-            bandName = bandName + "%20" + nodeArgs[i];
-
-        }
-
-        else {
-
-            bandName += nodeArgs[i];
-
-        }
-
-    }
-    console.log(bandName)
-
-    request("https://rest.bandsintown.com/artists/" + bandName + "/events?app_id=5d529be63a91e6431fc23cc57e36b35c", function (error, response, body) {
+    request("https://rest.bandsintown.com/artists/" + searchContent + "/events?app_id=5d529be63a91e6431fc23cc57e36b35c", function (error, response, body) {
 
         jsonData = JSON.parse(body)
         for (i = 0; i < jsonData.length; i++) {
@@ -170,22 +195,24 @@ concertSearch = function () {
 
 
 
-function finalFunction() {
+function finalFunction(searchContent) {
     fs.readFile("random.txt", "utf8", function (err, data) {
         if (err) {
             return console.log(err);
         }
         var holder = data.split(",");
         searchType = holder[0];
-        whatWant = holder[1];
+        searchContent = holder[1];
+        console.log(searchType)
+       
         if (searchType === "concert-this") {
-            concertSearch();
+            concertSearch(searchContent);
         }
         else if (searchType === "spotify-this-song") {
-            spotifySearch();
+            spotifySearch(searchContent);
         }
         else if (searchType === "movie-this") {
-            movieSearch();
+            movieSearch(searchContent);
         }
     })
 }
@@ -197,16 +224,17 @@ function finalFunction() {
 
 runLiri = function () {
     if (searchType === "concert-this") {
-        concertSearch();
+        // var searchJoin=searchContent.join("")
+        concertSearch(searchJoin);
     }
     else if (searchType === "spotify-this-song") {
-        spotifySearch();
+        spotifySearch(searchContent);
     }
     else if (searchType === "movie-this") {
-        movieSearch();
+        movieSearch(searchContent);
     }
     else if (searchType === "do-what-it-says") {
-        finalFunction();
+        finalFunction(searchContent);
     }
 
 }
