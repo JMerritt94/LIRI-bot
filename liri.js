@@ -224,7 +224,7 @@ function finalFunction(searchContent) {
 
 runLiri = function () {
     if (searchType === "concert-this") {
-        // var searchJoin=searchContent.join("")
+        var searchJoin=searchContent.join("")
         concertSearch(searchJoin);
     }
     else if (searchType === "spotify-this-song") {
